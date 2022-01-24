@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/web">
+        <file>epubReader.html</file>
+        <file>anatomy.epub</file>
+    </qresource>
+</RCC>
