@@ -1,0 +1,23 @@
+{
+	"BUILD_DIR" : "/home/johan/Programmering/QT/BookManager/cmake-build-debug/appBookManager_autogen",
+	"CMAKE_BINARY_DIR" : "/home/johan/Programmering/QT/BookManager/cmake-build-debug",
+	"CMAKE_CURRENT_BINARY_DIR" : "/home/johan/Programmering/QT/BookManager/cmake-build-debug",
+	"CMAKE_CURRENT_SOURCE_DIR" : "/home/johan/Programmering/QT/BookManager",
+	"CMAKE_SOURCE_DIR" : "/home/johan/Programmering/QT/BookManager",
+	"INCLUDE_DIR" : "/home/johan/Programmering/QT/BookManager/cmake-build-debug/appBookManager_autogen/include",
+	"INPUTS" : 
+	[
+		"/home/johan/Programmering/QT/BookManager/resources/epubReader.html",
+		"/home/johan/Programmering/QT/BookManager/resources/anatomy.epub"
+	],
+	"LOCK_FILE" : "/home/johan/Programmering/QT/BookManager/cmake-build-debug/CMakeFiles/appBookManager_autogen.dir/AutoRcc_web_3YJK5W5UP7_Lock.lock",
+	"MULTI_CONFIG" : false,
+	"OPTIONS" : [ "-name", "web" ],
+	"OUTPUT_CHECKSUM" : "3YJK5W5UP7",
+	"OUTPUT_NAME" : "qrc_web.cpp",
+	"RCC_EXECUTABLE" : "/usr/lib/qt6/rcc",
+	"RCC_LIST_OPTIONS" : [ "--list" ],
+	"SETTINGS_FILE" : "/home/johan/Programmering/QT/BookManager/cmake-build-debug/CMakeFiles/appBookManager_autogen.dir/AutoRcc_web_3YJK5W5UP7_Used.txt",
+	"SOURCE" : "/home/johan/Programmering/QT/BookManager/resources/web.qrc",
+	"VERBOSITY" : 0
+}

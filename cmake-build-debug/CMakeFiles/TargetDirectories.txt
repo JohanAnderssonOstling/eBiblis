@@ -1,0 +1,11 @@
+/home/johan/Programmering/QT/BookManager/cmake-build-debug/CMakeFiles/appBookManager.dir
+/home/johan/Programmering/QT/BookManager/cmake-build-debug/CMakeFiles/appBookManager_qmltyperegistration.dir
+/home/johan/Programmering/QT/BookManager/cmake-build-debug/CMakeFiles/all_qmltyperegistrations.dir
+/home/johan/Programmering/QT/BookManager/cmake-build-debug/CMakeFiles/appBookManager_other_files.dir
+/home/johan/Programmering/QT/BookManager/cmake-build-debug/CMakeFiles/appBookManager_qmllint.dir
+/home/johan/Programmering/QT/BookManager/cmake-build-debug/CMakeFiles/all_qmllint.dir
+/home/johan/Programmering/QT/BookManager/cmake-build-debug/CMakeFiles/appBookManager_tooling.dir
+/home/johan/Programmering/QT/BookManager/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/johan/Programmering/QT/BookManager/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/johan/Programmering/QT/BookManager/cmake-build-debug/CMakeFiles/appBookManager_autogen_timestamp_deps.dir
+/home/johan/Programmering/QT/BookManager/cmake-build-debug/CMakeFiles/appBookManager_autogen.dir

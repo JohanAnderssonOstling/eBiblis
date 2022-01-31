@@ -11,7 +11,7 @@ class LibraryModel : public QAbstractListModel {
 	Q_OBJECT
 private:
 	QStack<int> navStack;
-	int currentFolderID = 0;
+	int thumbnailWidthIndex = 1;
 	int containerType = FolderType;
 	struc::Library library;
 	QList<struc::Container> folders;
@@ -26,7 +26,9 @@ public:
 	enum Roles {
 		IDRole = Qt::UserRole,
 		NameRole,
-		LocationRole
+		LocationRole,
+		HasCoverRole,
+		CoverRole
 	};
 	enum ContainerTypes {
 		FolderType,

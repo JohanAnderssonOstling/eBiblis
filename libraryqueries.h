@@ -8,7 +8,7 @@
 namespace libraryquery {
 void createDB(QSqlQuery &query);
 void addFolder(QSqlQuery &query, struc::Component folder);
-void addBook(QSqlQuery &query, struc::Book book);
+int addBook(QSqlQuery &query, struc::Book book);
 void addAuthor(QSqlQuery &query);
 
 void setBookFolderID(QSqlQuery &query, QString name, int parentID);

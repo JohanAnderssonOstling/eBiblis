@@ -1,0 +1,49 @@
+/usr/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/opt/clion/bin/ninja/linux/ninja -DCMAKE_C_COMPILER=/usr/bin/gcc -DCMAKE_CXX_COMPILER=/usr/bin/g++ -G Ninja /home/johan/Programmering/QT/BookManager
+-- Could NOT find Qt6WebView (missing: Qt6WebView_DIR)
+CMake Warning at CMakeLists.txt:11 (find_package):
+  Found package configuration file:
+
+    /usr/lib64/cmake/Qt6/Qt6Config.cmake
+
+  but it set Qt6_FOUND to FALSE so package "Qt6" is considered to be NOT
+  FOUND.  Reason given by package:
+
+  Failed to find Qt component "WebView".
+
+  Expected Config file at
+  "/usr/lib64/cmake/Qt6WebView/Qt6WebViewConfig.cmake" does NOT exist
+
+  
+
+
+
+CMake Warning at CMakeLists.txt:13 (find_package):
+  By not providing "FindQuaZip-Qt6.cmake" in CMAKE_MODULE_PATH this project
+  has asked CMake to find a package configuration file provided by
+  "QuaZip-Qt6", but CMake did not find one.
+
+  Could not find a package configuration file provided by "QuaZip-Qt6" with
+  any of the following names:
+
+    QuaZip-Qt6Config.cmake
+    quazip-qt6-config.cmake
+
+  Add the installation prefix of "QuaZip-Qt6" to CMAKE_PREFIX_PATH or set
+  "QuaZip-Qt6_DIR" to a directory containing one of the above files.  If
+  "QuaZip-Qt6" provides a separate development package or SDK, be sure it has
+  been installed.
+
+
+-- Configuring done
+CMake Error at /usr/lib64/cmake/Qt6Core/Qt6CoreMacros.cmake:559 (add_executable):
+  Target "appBookManager" links to target "Qt6::WebView" but the target was
+  not found.  Perhaps a find_package() call is missing for an IMPORTED
+  target, or an ALIAS target is missing?
+Call Stack (most recent call first):
+  /usr/lib64/cmake/Qt6Core/Qt6CoreMacros.cmake:523 (_qt_internal_create_executable)
+  /usr/lib64/cmake/Qt6Core/Qt6CoreMacros.cmake:847 (qt6_add_executable)
+  CMakeLists.txt:16 (qt_add_executable)
+
+
+-- Generating done
+CMake Generate step failed.  Build files cannot be regenerated correctly.

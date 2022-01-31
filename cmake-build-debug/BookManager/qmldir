@@ -1,0 +1,8 @@
+module BookManager
+typeinfo appBookManager.qmltypes
+prefer :/BookManager/
+EpubReader 1.0 EpubReader.qml
+HomeView 1.0 HomeView.qml
+LibraryView 1.0 LibraryView.qml
+AddLibrary 1.0 AddLibrary.qml
+

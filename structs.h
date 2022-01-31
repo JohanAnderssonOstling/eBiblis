@@ -20,6 +20,7 @@ struct Component {
 struct Book : Component {
 	QString location;
 	int percentage;
+	QString author;
 	QString title;
 	QString isbn;
 	QString description;

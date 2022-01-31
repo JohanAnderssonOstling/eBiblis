@@ -41,7 +41,7 @@ void libraryquery::addFolder(QSqlQuery &query, struc::Component folder) {
 	query.exec();
 }
 
-void libraryquery::addBook(QSqlQuery &query, struc::Book book) {
+int libraryquery::addBook(QSqlQuery &query, struc::Book book) {
 	query.prepare("INSERT INTO book (name, title, isbn, description, folder_id) "
 					"VALUES (:name, :title, :isbn, :description, :folder_id)");
 	query.bindValue(":name",book.name);
@@ -52,6 +52,10 @@ void libraryquery::addBook(QSqlQuery &query, struc::Book book) {
 	if (!query.exec())
 		qWarning() << "addBook query failed:" << query.lastError().text()
 					 << query.lastQuery();
+	query.exec("SELECT last_insert_rowid()");
+	query.next();
+	int rowID = query.value(0).toInt();
+	return rowID;
 }
 
 void libraryquery::addAuthor(QSqlQuery &query) {

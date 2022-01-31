@@ -8,7 +8,7 @@ Window {
 	width: 640
 	height: 480
 	visible: true
-	title: qsTr("Hello World")
+	title: qsTr("eBiblis")
 
 	ColumnLayout{
 		anchors.fill:parent
@@ -23,7 +23,7 @@ Window {
 					onClicked: stackView.currentItem.backButtonPressed();
 				}
 				Label{
-					Layout.alignment: Qt.AlignCenter
+
 					text: stackView.currentItem.title
 					elide: Label.ElideRight
 					anchors.verticalCenter: parent.verticalCenter
@@ -33,9 +33,8 @@ Window {
 					visible: stackView.currentItem.showAddButton;
 					text: "+"
 					Layout.alignment: Qt.AlignRight
-					onClicked:{
-						stackView.currentItem.addButtonPressed();
-					}
+					onClicked: stackView.currentItem.addButtonPressed();
+
 				}
 			}
 		}

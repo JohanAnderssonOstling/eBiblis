@@ -23,6 +23,17 @@ ColumnLayout{
 	}
 
 	WebView{
+		function nextPage(){
+			epubWebView.runJavaScript("nextPage();", function(location){
+						LibraryModel.setBookLocation(location, row);
+					});
+		}
+		function prevPage(){
+			epubWebView.runJavaScript("prevPage()", function(location){
+						LibraryModel.setBookLocation(location, row);
+					});
+		}
+
 		id:epubWebView
 		Layout.fillWidth: true
 		Layout.fillHeight: true
@@ -33,6 +44,15 @@ ColumnLayout{
 		Keys.onLeftPressed: epubWebView.runJavaScript("prevPage()", function(location){
 			LibraryModel.setBookLocation(location, row);
 		});
-
+		MouseArea{
+			width: parent.width / 3
+			height: parent.height
+			x: (parent.width / 3) * 2
+			y: 0
+			onClicked: {
+				console.log("clicked")
+				nextPage();
+			}
+		}
 	}
 }

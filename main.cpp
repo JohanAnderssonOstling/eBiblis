@@ -5,21 +5,17 @@
 #include <QDebug>
 #include <iostream>
 #include <QQmlContext>
-#include "fileIO.h"
 #include <QtSql>
 #include <QSqlDriver>
 #include <QApplication>
 #include <homemodel.h>
 #include <librarymodel.h>
 #include <constants.h>
-void testarchive() {
-
-
-}
 
 
 void createDirs() {
 	QDir(constant::appDir).mkpath(".");
+	QDir(constant::tempDir).mkpath(".");
 	QDir(constant::webDir).mkpath(".");
 	QDir(constant::dataDir).mkpath(".");
 	QDir(constant::libraryDir).mkpath(".");
@@ -57,7 +53,6 @@ int main(int argc, char *argv[]) {
 	engine.rootContext()->setContextProperty("HomeModel", &homeModel);
 	engine.rootContext()->setContextProperty("LibraryModel", &libraryModel);
 	engine.rootContext()->setContextProperty("webPath", constant::webDir);
-	testarchive();
 
 	return app.exec();
 }

@@ -1,0 +1,10 @@
+<RCC>
+  <qresource prefix="/BookManager/">
+    <file alias="main.qml">/home/johan/Programmering/QT/BookManager/main.qml</file>
+    <file alias="EpubReader.qml">/home/johan/Programmering/QT/BookManager/EpubReader.qml</file>
+    <file alias="HomeView.qml">/home/johan/Programmering/QT/BookManager/HomeView.qml</file>
+    <file alias="LibraryView.qml">/home/johan/Programmering/QT/BookManager/LibraryView.qml</file>
+    <file alias="AddLibrary.qml">/home/johan/Programmering/QT/BookManager/AddLibrary.qml</file>
+  </qresource>
+</RCC>
+

@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/BookManager">
+    <file alias="qmldir">/home/johan/Programmering/QT/BookManager/cmake-build-debug/BookManager/qmldir</file>
+  </qresource>
+</RCC>
+
