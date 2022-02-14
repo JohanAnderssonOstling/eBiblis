@@ -17,59 +17,62 @@ void LibraryModel::scanLibrary() {
 
 	QSqlDatabase db = QSqlDatabase::database(library.uuid);
 	db.transaction();
-	scanLibraryAux(query, QUrl(library.path).toLocalFile(), 0);
+	scanLibraryAux(QUrl(library.path).toLocalFile(), 0);
 	db.commit();
 	navStack.clear();
 	changeFolder(0);
 }
-int LibraryModel::scanLibraryAux(QSqlQuery &query, QString path, int parentID) {
+int LibraryModel::scanLibraryAux(QString path, int parentID) {
 	QDirIterator iterator(path, QDir::NoDotAndDotDot | QDir::AllEntries);
 	int currentFolderID = parentID;
 	while (iterator.hasNext()) {
 		QFileInfo file(iterator.next());
-
 		if (file.isDir()) {
 			currentFolderID++;
 			struc::Container newFolder = {currentFolderID, file.fileName(), parentID};
 			libraryquery::addFolder(query, newFolder);
-			currentFolderID = scanLibraryAux(query, file.absoluteFilePath(), currentFolderID);
-
+			currentFolderID = scanLibraryAux(file.absoluteFilePath(), currentFolderID);
 		} else if (file.fileName().endsWith(".epub")) {
 			if (libraryquery::bookExists(query, file.fileName())) {
 				libraryquery::setBookFolderID(query, file.fileName(), parentID);
 			} else {
 				struc::Book newBook = bookparser::parseBook(file);
 				newBook.parentID = parentID;
-				QString rowID = QString::number(libraryquery::addBook(query, newBook));
-				QDir thumbDir(constant::thumbnailDir + library.uuid + "/" + rowID);
-				thumbDir.mkpath(".");
-				ioutil::clearDir(thumbDir);
-
-				for (int width : constant::thumbnailWidths) {
-					QString sourcePath = constant::tempDir + "thumbnail/" + QString::number(width);
-					QString destPath = thumbDir.absolutePath() + "/" +QString::number(width);
-					for (QString coverExtension : constant::coverExtensions) {
-
-						if (QFile::exists(sourcePath + coverExtension)) {
-							QFile::copy(sourcePath + coverExtension, destPath + coverExtension);
-						}
-					}
-
-				}
-				ioutil::clearDir(constant::tempDir + "thumbnail/");
+				QString bookID = QString::number(libraryquery::addBook(query, newBook));
+				moveThumbNails(bookID);
 			}
 		}
 	}
 	return currentFolderID;
 }
+void LibraryModel::moveThumbNails(QString bookID) {
+	QDir thumbDir(constant::thumbnailDir + library.uuid + "/" + bookID);
+	thumbDir.mkpath(".");
+	ioutil::clearDir(thumbDir);
+
+	for (int width : constant::coverWidths) {
+		QString sourcePath = constant::tempDir + "thumbnail/" + QString::number(width);
+		QString destPath = thumbDir.absolutePath() + "/" +QString::number(width);
+		for (QString coverExtension : constant::coverExtensions) {
+			if (QFile::exists(sourcePath + coverExtension)) {
+				QFile::copy(sourcePath + coverExtension, destPath + coverExtension);
+			}
+		}
+
+	}
+	ioutil::clearDir(constant::tempDir + "thumbnail/");
+}
 int LibraryModel::rowCount(const QModelIndex &parent) const {
 	return folders.size() + books.size();
 }
-
+int LibraryModel::getCoverWidth() const {
+	return constant::coverWidths[coverWidthIndex];
+}
 QVariant LibraryModel::data(const QModelIndex &index, int role) const {
+
 	int row = index.row();
-	if (row < folders.size()) {
-		struc::Container folder = folders.at(row);
+	if (isFolder(row)) {
+		struc::Container folder(folders.at(row));
 		switch(role) {
 			case IDRole: return folder.id;
 			case NameRole: return folder.name;
@@ -80,10 +83,11 @@ QVariant LibraryModel::data(const QModelIndex &index, int role) const {
 		struc::Book book(books.at(row));
 		QString thumbnailPath = constant::thumbnailDir + library.uuid + "/" +
 								QString::number(book.id) + "/" +
-								QString::number(constant::thumbnailWidths[thumbnailWidthIndex]);
+								QString::number(constant::coverWidths[coverWidthIndex]);
 		switch(role) {
 			case IDRole: return book.id;
 			case NameRole: return (book.title != "title") ? book.title : book.name;
+			case AuthorRole: return book.authors.join("\n");
 			case LocationRole: return book.location;
 			case HasCoverRole:
 				for (QString coverExtension : constant::coverExtensions)
@@ -93,7 +97,6 @@ QVariant LibraryModel::data(const QModelIndex &index, int role) const {
 				for (QString coverExtension : constant::coverExtensions)
 					if (QFile::exists(thumbnailPath + coverExtension))
 						return thumbnailPath + coverExtension;
-
 		}
 	}
 	return "";
@@ -105,7 +108,8 @@ QHash<int, QByteArray> LibraryModel::roleNames() const {
 		{NameRole, "name"},
 		{LocationRole, "location"},
 		{HasCoverRole, "hasCover"},
-		{CoverRole, "cover"}
+		{CoverRole, "cover"},
+		{AuthorRole, "author"}
 	};
 	return mapping;
 }
@@ -130,7 +134,7 @@ void LibraryModel::changeFolder(int folderID) {
 	endResetModel();
 	navStack.push(folderID);
 }
-bool LibraryModel::isFolder(int row) {
+bool LibraryModel::isFolder(int row) const {
 	return row < folders.size();
 }
 bool LibraryModel::prevFolder() {

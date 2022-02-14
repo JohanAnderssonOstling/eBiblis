@@ -20,28 +20,38 @@ void libraryquery::createDB(QSqlQuery &query) {
 				 "folder_id INTEGER REFERENCES folder);");
 
 	query.exec("CREATE TABLE author("
-				 "author_id  INTEGER PRIMARY KEY NOT NULL,"
+				 "author_id  INTEGER PRIMARY KEY,"
 				 "name    TEXT    NOT NULL);");
 
 	query.exec("CREATE TABLE book_author("
-				 "book_uuid INTEGER NOT NULL REFERENCES book,"
-				 "author_uuid INTEGER NOT NULL REFERENCES author,"
-				 "PRIMARY KEY (book_uuid, author_uuid));");
+				 "book_id INTEGER NOT NULL REFERENCES book,"
+				 "author_id INTEGER NOT NULL REFERENCES author,"
+				 "PRIMARY KEY (book_id, author_id));");
 
 	query.exec("INSERT INTO folder VALUES (0,\"root\",0);");
-	query.exec("INSERT INTO author VALUES (0,\"root\");");
-	//query.exec("INSERT INTO folder VALUES (0,\"root\",0);");
 }
 
-void libraryquery::addFolder(QSqlQuery &query, struc::Component folder) {
-	query.prepare("INSERT INTO folder VALUES (?,?,?);");
-	query.addBindValue(folder.id);
-	query.addBindValue(folder.name);
-	query.addBindValue(folder.parentID);
+int libraryquery::addAuthor(QSqlQuery &query, QString name) {
+	query.prepare("INSERT INTO author (name) VALUES (?);");
+	query.addBindValue(name);
 	query.exec();
+	query.next();
+	query.exec("SELECT last_insert_rowid()");
+	query.next();
+	int rowID = query.value(0).toInt();
+	return rowID;
 }
-
+void libraryquery::addBookAuthor(QSqlQuery &query, int bookID, int bookAuthor) {
+	query.prepare("INSERT INTO book_author (book_id, author_id) VALUES (?,?);");
+	query.addBindValue(bookID);
+	query.addBindValue(bookAuthor);
+	if (!query.exec())
+		qWarning() << "addBook query failed:" << query.lastError().text()
+					 << query.lastQuery();
+}
 int libraryquery::addBook(QSqlQuery &query, struc::Book book) {
+
+
 	query.prepare("INSERT INTO book (name, title, isbn, description, folder_id) "
 					"VALUES (:name, :title, :isbn, :description, :folder_id)");
 	query.bindValue(":name",book.name);
@@ -55,12 +65,26 @@ int libraryquery::addBook(QSqlQuery &query, struc::Book book) {
 	query.exec("SELECT last_insert_rowid()");
 	query.next();
 	int rowID = query.value(0).toInt();
+
+	int authorID;
+	for (QString author : book.authors) {
+		if(authorExists(query, author))
+			authorID = getAuthorID(query, author);
+		else authorID = addAuthor(query, author);
+		addBookAuthor(query, rowID, authorID);
+	}
+
+
 	return rowID;
 }
-
-void libraryquery::addAuthor(QSqlQuery &query) {
-
+void libraryquery::addFolder(QSqlQuery &query, struc::Component folder) {
+	query.prepare("INSERT INTO folder VALUES (?,?,?);");
+	query.addBindValue(folder.id);
+	query.addBindValue(folder.name);
+	query.addBindValue(folder.parentID);
+	query.exec();
 }
+
 void libraryquery::setBookFolderID(QSqlQuery &query, QString name, int parentID) {
 	query.prepare("UPDATE book SET folder_id = ? "
 					"WHERE name = ? AND folder_id = NULL LIMIT 1;");
@@ -69,13 +93,40 @@ void libraryquery::setBookFolderID(QSqlQuery &query, QString name, int parentID)
 	query.exec();
 }
 void libraryquery::setBookLocation(QSqlQuery &query, QString location, int bookID) {
-	query.prepare("UPDATE book SET read_location = ? WHERE book_id = ?");
+	query.prepare("UPDATE book SET read_location = ? WHERE book_id = ?;");
 	query.addBindValue(location);
 	query.addBindValue(bookID);
 	query.exec();
 }
+QStringList libraryquery::getAuthorNames(QSqlQuery &query, int bookID) {
+	query.prepare("SELECT a.name FROM author a "
+					"JOIN book_author ba ON a.author_id = ba.author_id "
+					"JOIN book b ON ba.book_id = b.book_id "
+					"WHERE b.book_id = ?;");
+	query.addBindValue(bookID);
+	if (!query.exec())
+		qWarning() << "getAuthorName failed:" << query.lastError().text();
+	QStringList authorNames;
+	while(query.next()) {
+		authorNames.append(query.value(0).toString());
+	}
+	return authorNames;
+}
+int libraryquery::getAuthorID(QSqlQuery &query, QString name) {
+	query.prepare("SELECT author_id FROM author WHERE name = ?;");
+	query.addBindValue(name);
+	query.next();
+	return query.value(0).toInt();
+}
+bool libraryquery::authorExists(QSqlQuery &query, QString name) {
+	query.prepare("SELECT COUNT(*) FROM author WHERE name = ?;");
+	query.addBindValue(name);
+	query.exec();
+	query.next();
+	return query.value(0).toInt() > 0;
+}
 bool libraryquery::bookExists(QSqlQuery &query, QString name) {
-	query.prepare("SELECT COUNT(*) FROM book WHERE name=?;");
+	query.prepare("SELECT COUNT(*) FROM book WHERE name = ?;");
 	query.addBindValue(name);
 
 	if (!query.exec())
@@ -106,6 +157,9 @@ QList<struc::Book> libraryquery::getBooks(QSqlQuery &query, int parentID) {
 		books[i].isbn = query.value(5).toString();
 		books[i].description = query.value(6).toString();
 		books[i].parentID = query.value(7).toInt();
+	}
+	for (int i = 0; i < books.size(); i++) {
+		books[i].authors = getAuthorNames(query, books.at(i).id);
 	}
 	return books;
 }

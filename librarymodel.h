@@ -9,9 +9,10 @@
 #include <structs.h>
 class LibraryModel : public QAbstractListModel {
 	Q_OBJECT
+	Q_PROPERTY(int coverWidth READ getCoverWidth NOTIFY coverWidthChanged)
 private:
 	QStack<int> navStack;
-	int thumbnailWidthIndex = 1;
+	int coverWidthIndex = 0;
 	int containerType = FolderType;
 	struc::Library library;
 	QList<struc::Container> folders;
@@ -19,13 +20,15 @@ private:
 	QSqlQuery query;
 
 	void scanLibrary();
-	int scanLibraryAux(QSqlQuery &query, QString path, int parentID);
+	int scanLibraryAux (QString path, int parentID);
+	void moveThumbNails(QString bookID);
 	void updateLibrary();
 
 public:
 	enum Roles {
 		IDRole = Qt::UserRole,
 		NameRole,
+		AuthorRole,
 		LocationRole,
 		HasCoverRole,
 		CoverRole
@@ -39,13 +42,16 @@ public:
 
 	explicit LibraryModel(QObject *parent = 0);
 	int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+	int getCoverWidth() const;
 	QVariant data(const QModelIndex &index, int role) const override;
 	QHash<int, QByteArray> roleNames() const override;
+signals:
+	void coverWidthChanged();
 public slots:
 	void setLibrary(struc::Library library);
 	void setBookLocation(QString newLocation, int row);
 	void changeFolder(int folderID);
-	bool isFolder(int row);
+	bool isFolder(int row) const;
 	bool prevFolder();
 	QString getFullPath(int row);
 };

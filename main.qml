@@ -23,7 +23,6 @@ Window {
 					onClicked: stackView.currentItem.backButtonPressed();
 				}
 				Label{
-
 					text: stackView.currentItem.title
 					elide: Label.ElideRight
 					anchors.verticalCenter: parent.verticalCenter

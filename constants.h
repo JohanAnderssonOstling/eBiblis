@@ -5,7 +5,7 @@
 
 namespace constant {
 
-const int thumbnailWidths[] = {250,500,1000};
+const int coverWidths[] = {250,500,1000};
 
 const QString appDir = QStandardPaths::writableLocation
 						 (QStandardPaths::AppDataLocation) + "/eBiblis/";

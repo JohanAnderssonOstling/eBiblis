@@ -7,7 +7,7 @@ import Qt.labs.platform 1.1
 ColumnLayout{
 	property bool showAddButton: false
 	property bool showBackButton: true
-
+	property int coverWidth: LibraryModel.coverWidth
 	property string title: "Library"
 	function backButtonPressed(){
 		if (!LibraryModel.prevFolder())
@@ -30,9 +30,10 @@ ColumnLayout{
 		id: libraryGrid
 		Layout.fillWidth: true
 		Layout.fillHeight: true
-		property int elementsPerRow: (width / 500)
-		cellWidth: 500 + ((width % 500.0) / (elementsPerRow))
-		cellHeight: 840
+
+		property int elementsPerRow: (width / coverWidth)
+		cellWidth: coverWidth + ((width % (coverWidth + 0.0)) / (elementsPerRow))
+		cellHeight: coverWidth * 1.6 + 40
 		clip:true
 		model: LibraryModel
 		focus: true
@@ -40,16 +41,16 @@ ColumnLayout{
 		delegate:Item{
 
 			Column{
-			x: (libraryGrid.cellWidth - 500)/ 2
-			width: 500
-			height: 840
+			x: (libraryGrid.cellWidth - coverWidth)/ 2
+			width: coverWidth
+			height: parent.cellHeight
 
 			Rectangle{
 				id: coverPlaceHolder
 				visible: !model.hasCover
 
-				width: 500
-				height: 660
+				width: coverWidth
+				height: coverWidth * 1.2
 				color: "cornflowerblue"
 				MouseArea{
 					anchors.fill: parent
@@ -86,7 +87,7 @@ ColumnLayout{
 
 
 			Text{
-				width: 500
+				width: coverWidth
 				visible: model.hasCover
 				text:model.name
 				horizontalAlignment: Text.AlignHCenter
@@ -94,9 +95,9 @@ ColumnLayout{
 				elide: Text.ElideRight
 			}
 			Text{
-				width: 500
+				width: coverWidth
 				visible: model.hasCover
-				text: "author"
+				text: model.author
 				horizontalAlignment: Text.AlignHCenter
 			}
 		}

@@ -34,7 +34,7 @@ void createThumbNails(QString archivePath, QString coverPath) {
 	QString coverExtension = coverPath.split(".").last();
 	QImage cover(constant::tempDir + coverPath);
 
-	for (int width : constant::thumbnailWidths) {
+	for (int width : constant::coverWidths) {
 		double scaling = width / (double) cover.width();
 		int height = (int) (scaling * cover.height());
 		QImage thumbNail = cover.scaled(width, height, Qt::KeepAspectRatio, Qt::SmoothTransformation);
@@ -61,11 +61,11 @@ struc::Book parseEpub(QFileInfo file) {
 	opfFile.open(QIODevice::ReadOnly);
 	QXmlStreamReader reader(&opfFile);
 	QString coverPath;
-	while(! reader.atEnd()) {
+	while(!reader.atEnd()) {
 		QString name = reader.name().toString();
 		QXmlStreamAttributes attributes = reader.attributes();
 		if (name == "title") book.title = reader.readElementText();
-		else if (name == "creator") book.author = reader.readElementText();
+		else if (name == "creator") book.authors.append(reader.readElementText());
 		else if (name == "description") book.description = reader.readElementText();
 		else if (name == "publisher");
 		else if (name == "identifier") book.isbn = reader.readElementText();
