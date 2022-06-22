@@ -58,7 +58,6 @@ void LibraryModel::moveThumbNails(QString bookID) {
 				QFile::copy(sourcePath + coverExtension, destPath + coverExtension);
 			}
 		}
-
 	}
 	ioutil::clearDir(constant::tempDir + "thumbnail/");
 }

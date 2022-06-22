@@ -7,8 +7,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-find_package(Qt6 6.2 COMPONENTS Widgets Core Quick Core5Compat REQUIRED)
-find_package(Qt6 6.2 COMPONENTS WebView Sql)
+find_package(Qt6 6.3 COMPONENTS Core Quick Core5Compat REQUIRED)
+find_package(Qt6 6.3 COMPONENTS WebView Sql)
 find_package(ZLIB)
 include_directories(quazip)
 
